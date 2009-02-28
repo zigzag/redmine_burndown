@@ -1,6 +1,53 @@
 <h2><%= @version.name %> <%= l(:burndown) %></h2>
 
-<p><%= image_tag(@chart.to_s) %></p>
+<p><div id="placeholder" style="width:750px;height:400px"></div></p>
+<script id="source" language="javascript" type="text/javascript">
+
+
+
+jQuery(function () {
+	// helper for returning the weekends in a period
+	function weekendAreas(axes) {
+	    var markings = [];
+	    var d = new Date(axes.xaxis.min);
+	    // go to the first Saturday
+	    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
+	    d.setUTCSeconds(0);
+	    d.setUTCMinutes(0);
+	    d.setUTCHours(0);
+	    var i = d.getTime();
+	    do {
+	        // when we don't set yaxis the rectangle automatically
+	        // extends to infinity upwards and downwards
+	        markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
+	        i += 7 * 24 * 60 * 60 * 1000;
+	    } while (i < axes.xaxis.max);
+
+	    return markings;
+	}
+	var data= [];
+	var remaining_work = [<%=@chart.sprint_data.join(',')%>];
+	var dates = [<%=@chart.dates.map {|d| d.to_time.to_i*1000 }.join(',')%>];
+	for( var i=0;i< dates.length;i++) {
+		data.push([dates[i], remaining_work[i]])
+	}
+	
+	var ideal_data=[[dates[0],<%=@chart.ideal_data[0]%>],[dates[dates.length-1],<%=@chart.ideal_data[1]%>]];
+jQuery.plot(jQuery("#placeholder"),  [{
+			label:"Est. Remaining Time",
+            data: data
+        }, {
+			label:"Ideal Burn-down",
+			data:ideal_data
+}]
+, { xaxis: { mode: "time" },
+	lines: { show: true },
+	points: { show: true },
+	grid: { markings: weekendAreas } 
+  }
+ );
+});
+</script>
 
 <% content_for :sidebar do -%>
   <h3><%= l(:label_version_plural) %></h3>

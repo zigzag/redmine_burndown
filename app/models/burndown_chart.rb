@@ -1,25 +1,12 @@
 class BurndownChart
   attr_accessor :dates, :version, :start_date
   
-  delegate :to_s, :to => :chart
-  
   def initialize(version)
     self.version = version
     
     self.start_date = version.created_on.to_date
     end_date = version.effective_date.to_date
-    self.dates = (start_date..end_date).inject([]) { |accum, date| accum << date }
-  end
-  
-  def chart
-    Gchart.line(
-      :size => '750x400', 
-      :data => data,
-      :axis_with_labels => 'x,y',
-      :axis_labels => [dates.map {|d| d.strftime("%m-%d") }],
-      :custom => "chxr=1,0,#{sprint_data.max}",
-      :line_colors => "DDDDDD,FF0000"
-    )
+    @dates = (start_date..end_date).inject([]) { |accum, date| accum << date }
   end
   
   def data
@@ -27,7 +14,7 @@ class BurndownChart
   end
   
   def sprint_data
-    @sprint_data ||= dates.map do |date|
+    @sprint_data ||= @dates.map do |date|
       issues = all_issues.select {|issue| issue.created_on.to_date <= date }
       issues.inject(0) do |total_hours_left, issue|
         done_ratio_details = issue.journals.map(&:details).flatten.select {|detail| 'done_ratio' == detail.prop_key }
