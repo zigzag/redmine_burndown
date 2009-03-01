@@ -4,6 +4,7 @@ class BurndownListener < Redmine::Hook::ViewListener
     javascript_include_tag('jquery.js', :plugin => 'redmine_burndown') + "\n"+
     javascript_include_tag('jquery.flot.pack.js', :plugin => 'redmine_burndown')+ "\n"+
     javascript_include_tag('excanvas.flot.pack.js', :plugin => 'redmine_burndown')+ "\n"+
+    javascript_include_tag('burndowns.js', :plugin => 'redmine_burndown') + "\n"+
     <<EOS
     <script language="JavaScript" type="text/javascript">
       jQuery.noConflict();
