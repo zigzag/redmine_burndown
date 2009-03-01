@@ -1,5 +1,4 @@
 require 'redmine'
-require 'gchart' 
 
 require_dependency 'burndown_listener'
 require_dependency 'scrum_alliance/redmine/current_version_extension'
