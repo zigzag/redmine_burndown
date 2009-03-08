@@ -29,11 +29,15 @@ function plotChart(elementId, real_data, ideal_data) {
 				  lines: { show: true },
 				  points: { show: true },
 				  grid: { markings: weekendAreas }};
-				
-	jQuery.plot(jQuery("#" + elementId),  
-				[{  label:"Est. Remaining Time",
-	            	data: real_data}, {
-					label:"Ideal Burn-down",
-					data: ideal_data}],
-				config);
+	plotChartWithConfig(elementId,
+						[{  label:"Est. Remaining Time",
+	            			data: real_data}, {
+							label:"Ideal Burn-down",
+							data: ideal_data}],
+						config)			
+
 };
+
+function plotChartWithConfig(elementId, data, config) {
+	jQuery.plot(jQuery("#" + elementId), data, config);	
+}
