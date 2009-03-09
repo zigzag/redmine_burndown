@@ -1,7 +1,10 @@
 <h2><%= @version.name %> <%= l(:burndown) %></h2>
-<p><%= render_burndown @chart, :width=>750, :height=>400 %></p>
-
-
+<p><div id="placeholder" style="width:750px;height:400px"></div>
+<%= chart("placeholder", {		"Est. Remaining Time"=> {:collection => @chart.sprint_data,:x=>:date, :y=>:hours},
+						  		"Ideal Burndown"=> {:collection => @chart.ideal_data,:x=>:date, :y=>:hours}
+						  }, 
+						  {"xaxis"=>{:mode=>:time}, :lines=>{:show=>true}, :points=>{:show=>true}, :grid=>{:markings=> "weekendAreas"}} ) %>
+</p>
 <% content_for :sidebar do -%>
   <h3><%= l(:label_version_plural) %></h3>
   <ul id="sprint_burndown_list">

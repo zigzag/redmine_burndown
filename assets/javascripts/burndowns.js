@@ -1,4 +1,3 @@
-//TODO: STick these methods into a prototype/namespace to avoid conflicts.
 
 
 // Figure out FLOT markings to represent weekends in a graph
@@ -20,24 +19,4 @@ function weekendAreas(axes) {
     } while (i < axes.xaxis.max);
 
     return markings;
-}
-
-// Plot a FLOT chart passing a particular div element to base the canvas on 
-// and the real + ideal data to render.
-function plotChart(elementId, real_data, ideal_data) {
-	var config= { xaxis: { mode: "time" },
-				  lines: { show: true },
-				  points: { show: true },
-				  grid: { markings: weekendAreas }};
-	plotChartWithConfig(elementId,
-						[{  label:"Est. Remaining Time",
-	            			data: real_data}, {
-							label:"Ideal Burn-down",
-							data: ideal_data}],
-						config)			
-
-};
-
-function plotChartWithConfig(elementId, data, config) {
-	jQuery.plot(jQuery("#" + elementId), data, config);	
 }
