@@ -3,7 +3,10 @@
 <%= chart("placeholder", {		"Est. Remaining Time"=> {:collection => @chart.sprint_data,:x=>:date, :y=>:hours},
 						  		"Ideal Burndown"=> {:collection => @chart.ideal_data,:x=>:date, :y=>:hours}
 						  }, 
-						  {"xaxis"=>{:mode=>:time}, :lines=>{:show=>true}, :points=>{:show=>true}, :grid=>{:markings=> "weekendAreas"}} ) %>
+						  { :xaxis=>{:mode=>:time}, 
+						    :lines=>{:show=>true}, 
+						    :points=>{:show=>true}
+						  } ) %>
 </p>
 <% content_for :sidebar do -%>
   <h3><%= l(:label_version_plural) %></h3>
