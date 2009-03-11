@@ -30,6 +30,9 @@ class BurndownChart
     cached_all_issues= all_issues.collect do |issue|
          CachedIssue.new( issue )
     end
+    
+    max_data= nil
+    
     @sprint_data ||= @dates.inject([]) do |data_map, date|
       issues = []
       cached_all_issues.each do |cached_issue| 
@@ -56,10 +59,38 @@ class BurndownChart
       
         total_hours_left += (cached_issue.issue.estimated_hours.to_i * (100-ratio.to_i)/100)
       end
+      pair= DateHoursPair.new(date, total_hours)
+      if max_data.nil? or  ( max_data.hours <= pair.hours and date <= Date.today) 
+          max_data= pair
+      end
       data_map << DateHoursPair.new(date, total_hours)
     end
-    
-    @ideal_data= [@sprint_data.first, DateHoursPair.new(@sprint_data.last.date, 0)]
+    if max_data.nil? 
+      @ideal_data= []
+    else
+      #By this point we should have the most recent day (before and including today) that had the most work outstanding on it
+      #As this date is likely not the same date as the start of the sprint, we'll need to track backwards to calculate the 
+      #estimated ideal burn-down rate,  that would have adequately covered the peak work (these lines are only guidance lines anyway so 
+      #I guess it doesn't really matter, but if you happened to do you estimates *after* starting a sprint it will make those graphs
+      # look a little saner.)
+      end_data= DateHoursPair.new(@sprint_data.last.date, 0)
+      
+      if max_data.date == @sprint_data.first.date or max_data.date == @sprint_data.last.date
+        start_data= max_data
+      else
+        # So we've a point on the line, and enough maths to work out the gradient to 'draw' a line back to the start of the sprint to work 
+        # what the maximum amount of hours could conceivably have been 
+        days_until_end= end_data.date - max_data.date
+        days_since_start= max_data.date - @sprint_data.first.date
+        hours= max_data.hours
+        gradient=  hours / days_until_end
+        original_conceivable_hours= hours + (gradient * days_since_start)
+        start_data= DateHoursPair.new(@sprint_data.first.date,  original_conceivable_hours )
+      end
+      
+      
+      @ideal_data= [start_data, end_data]
+    end
   end
     
   def all_issues
