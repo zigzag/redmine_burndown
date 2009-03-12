@@ -6,11 +6,9 @@ function burndownMarkings(axes) {
     var markings= [];
     var d = new Date(axes.xaxis.min);
     // go to the first Saturday
-    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
-    d.setUTCSeconds(0);
-    d.setUTCMinutes(0);
-    d.setUTCHours(0);
-    var i = d.getTime();
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+    var i = getUTCMidnight(d);
+
     do {
         // when we don't set yaxis the rectangle automatically
         // extends to infinity upwards and downwards
@@ -19,12 +17,14 @@ function burndownMarkings(axes) {
     } while (i < axes.xaxis.max);
 
 	// Add in 'today'
-	var today= new Date();
-    today.setUTCSeconds(0);
-    today.setUTCMinutes(0);
-    today.setUTCHours(0);
-    i = today.getTime();
-
+    i = getUTCMidnight(new Date());
 	markings.push( { xaxis: {from:i, to: i, lineWidth:6 },color:'#aaa' } )
     return markings;
+}
+
+function getUTCMidnight(date) {
+	date.setUTCSeconds(0);
+	date.setUTCMinutes(0);
+    date.setUTCHours(0);
+    return date.getTime();
 }
