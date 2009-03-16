@@ -87,9 +87,20 @@ class BurndownChart
         original_conceivable_hours= hours + (gradient * days_since_start)
         start_data= DateHoursPair.new(@sprint_data.first.date,  original_conceivable_hours )
       end
-      
-      
-      @ideal_data= [start_data, end_data]
+
+      @ideal_data =[start_data]
+      if start_data.date != end_data.date 
+        gradient= start_data.hours / (  start_data.date - end_data.date) 
+        d1= start_data.date
+        d1 +=1 while (d1.wday != 1)
+        gradient= start_data.hours / ( end_data.date - start_data.date) 
+        d1.step(end_data.date, 7) do |date|
+          hours=  start_data.hours- (gradient * (date-start_data.date))
+          @ideal_data << DateHoursPair.new(date- 2,  hours)
+          @ideal_data << DateHoursPair.new(date,  hours)
+        end
+      end
+      @ideal_data<< end_data
     end
   end
     
