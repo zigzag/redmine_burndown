@@ -19,7 +19,9 @@ class BurndownChart
   
   def initialize(version)
     self.version = version
-    
+    @cached_all_issues= all_issues.collect do |issue|
+         CachedIssue.new( issue )
+    end    
     self.start_date = version.created_on.to_date
     end_date = version.effective_date.to_date
     @dates = (start_date..end_date).inject([]) { |accum, date| accum << date }
@@ -27,15 +29,13 @@ class BurndownChart
   end
   
   def generate_sprint_data
-    cached_all_issues= all_issues.collect do |issue|
-         CachedIssue.new( issue )
-    end
+
     
     max_data= nil
     
     @sprint_data ||= @dates.inject([]) do |data_map, date|
       issues = []
-      cached_all_issues.each do |cached_issue| 
+      @cached_all_issues.each do |cached_issue| 
         break if cached_issue.issue.created_on.to_date > date 
         issues<< cached_issue if cached_issue.issue.created_on.to_date <= date
       end
