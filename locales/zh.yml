@@ -1,0 +1,3 @@
+zh:
+  burndown: 燃尽图
+  burndown_text_no_sprint: 当前项目还没有配置版本，不能生成燃尽图。
