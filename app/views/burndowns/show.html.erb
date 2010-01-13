@@ -1,7 +1,9 @@
 <h2><%= @version.name %> <%= l(:burndown) %></h2>
 <div id="placeholder" style="width:750px;height:400px"></div>
-<%= chart("placeholder", {		"Est. Remaining Time"=> {:collection => @chart.sprint_data,:x=>:date, :y=>:hours},
-						  		"Ideal Burndown"=> {:collection => @chart.ideal_data,:x=>:date, :y=>:hours, :options=>{:points=>{:show=>false}}}
+<%= chart("placeholder", {
+                  "Planned" => {:collection => @chart.planned_data,:x => :date, :y => :hours, :options=>{:points=>{:show=>false}}},
+                  "Insight"=> {:collection => @chart.insight_data,:x=>:date, :y=>:hours},
+                  "TODO"=> {:collection => @chart.todo_data,:x=>:date, :y=>:hours}
 						  }, 
 						  { :xaxis=>{:mode=>:time}, 
 						    :lines=>{:show=>true}, 

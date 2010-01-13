@@ -32,7 +32,6 @@ class BurndownChart
 
     
     max_data= nil
-    
     @sprint_data ||= @dates.inject([]) do |data_map, date|
       issues = []
       @cached_all_issues.each do |cached_issue| 

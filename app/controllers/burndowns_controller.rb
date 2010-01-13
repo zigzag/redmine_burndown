@@ -5,7 +5,7 @@ class BurndownsController < ApplicationController
   before_filter :find_version_and_project, :authorize, :only => [:show]
 
   def show
-    @chart = BurndownChart.new(@version)
+    @chart = EnhancedBurndownChart.new(@version)
   end
 
 private
