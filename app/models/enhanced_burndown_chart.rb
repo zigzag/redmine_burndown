@@ -31,6 +31,7 @@ class EnhancedBurndownChart
     #   predict_data << DateHoursPair.new(date,hours)
     # end
     predict_data = []
+    return predict_data if velocity <= 0 # unpredictable
     date = latest_entry_date
     todo = latest_date_todo_hours
     begin
