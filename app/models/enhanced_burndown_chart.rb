@@ -26,10 +26,6 @@ class EnhancedBurndownChart
   end
   
   def predict_data
-    # (latest_entry_date..effective_date).inject([]) do |predict_data, date|
-    #   hours = start_date_todo_hours - (velocity * (date - start_date))
-    #   predict_data << DateHoursPair.new(date,hours)
-    # end
     predict_data = []
     return predict_data if velocity <= 0 # unpredictable
     date = latest_entry_date
@@ -61,7 +57,7 @@ class EnhancedBurndownChart
     @effective_date ||= version.effective_date.to_date
   end
   def latest_entry_date
-    @latest_entry_date ||= all_issues.map(&:latest_entry_date).compact.sort.last || effective_date
+    @latest_entry_date ||= all_issues.map(&:latest_entry_date).compact.sort.last || start_date
   end
   def start_date_todo_hours
     @start_date_todo_hours ||= sum_up_hours(:todo_hours_till,start_date)

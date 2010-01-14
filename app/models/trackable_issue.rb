@@ -24,7 +24,7 @@ module TrackableIssue
       end
       private 
       def time_entries_till(date)
-        time_entries.select{ |entry| entry.spent_on < date}
+        time_entries.select{ |entry| entry.spent_on <= date}
       end
       def children_count
         @children_count ||= children.count
