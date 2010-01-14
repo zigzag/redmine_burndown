@@ -35,7 +35,7 @@ class EnhancedBurndownChart
     todo = latest_date_todo_hours
     begin
       predict_data << DateHoursPair.new(date,todo)
-      todo -= velocity unless [0,6].include?(date.wday)
+      todo -= velocity unless [0,6].include?(date.wday) # todo burndown unless weekend
       date += 1.day
     end until todo < 0
     predict_data << DateHoursPair.new(date,0)
