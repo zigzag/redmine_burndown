@@ -6,7 +6,7 @@ module TrackableIssue
       def planned_hours 
         # Only collect the issues which have not children because the parent issue's estimated time 
         # is already caculated by summing up children's by subtask plugin.
-        (children_count == 0) ? estimated_hours : 0
+        (children_count == 0) ? (estimated_hours || 0) : 0
       end 
       def done_hours_till(date)
         time_entries_till(date).sum(&:hours)
