@@ -9,10 +9,12 @@ class BurndownListener < Redmine::Hook::ViewListener
     time_entry = context[:time_entry]
     issue = time_entry.issue
     return unless issue
+
+    estimated_hours_hint = "(Estimated <b>#{issue.estimated_hours}</b> hours)." if issue.estimated_hours
     tips = <<HTML
     <div class='flash warning'>
       Before your entry, <b>#{issue.spent_hours}</b> hours have been spent on Issue ##{issue.id} 
-      (Estimated <b>#{issue.estimated_hours}</b> hours).
+      #{estimated_hours_hint}
     </div>    
 HTML
     links = issue.children.inject('') do |buffer,child| 
