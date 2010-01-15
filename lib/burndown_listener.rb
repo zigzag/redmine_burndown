@@ -24,8 +24,13 @@ HTML
       <ul>
         #{links}
       </ul>
-    </div>    
+    </div>
+    <script>
+      jQuery(function(){jQuery("[name='commit']").attr('disabled',true)});
+    </script>
 HTML
     return ((issue.children.size > 0) ? warnning : tips)
   end
+
 end
+
