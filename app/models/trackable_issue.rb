@@ -22,9 +22,12 @@ module TrackableIssue
       def latest_entry_date
         time_entries.map(&:spent_on).sort.last
       end
+      def first_entry_date
+        time_entries.map(&:spent_on).sort.first
+      end
       private 
       def time_entries_till(date)
-        time_entries.select{ |entry| entry.spent_on <= date}
+        time_entries.select{ |entry| entry.spent_on < date}
       end
       def children_count
         @children_count ||= children.count

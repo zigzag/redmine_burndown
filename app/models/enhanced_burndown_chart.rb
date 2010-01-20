@@ -8,19 +8,19 @@ class EnhancedBurndownChart
   end
   
   def planned_data
-    [start_date,effective_date].inject([]) do |planned_data, date| 
+    [first_entry_date,effective_date].inject([]) do |planned_data, date| 
       planned_data << DateHoursPair.new(date,all_issues.sum(&:planned_hours))
     end
   end
 
   def insight_data
-    (start_date..latest_entry_date).inject([]) do |insight_data, date| 
+    (first_entry_date..latest_entry_date).inject([]) do |insight_data, date| 
       insight_data << DateHoursPair.new(date,sum_up_hours(:insight_hours_till,date))
     end
   end
 
   def todo_data
-    (start_date..latest_entry_date).inject([]) do |todo_data, date| 
+    (first_entry_date..latest_entry_date).inject([]) do |todo_data, date| 
       todo_data << DateHoursPair.new(date,sum_up_hours(:todo_hours_till,date))
     end
   end
@@ -34,6 +34,7 @@ class EnhancedBurndownChart
       predict_data << DateHoursPair.new(date,todo)
       todo -= velocity unless [0,6].include?(date.wday) # todo burndown unless weekend
       date += 1.day
+      # todo = 0 if todo < 0
     end until todo <= 0
     predict_data << DateHoursPair.new(date,0)
     predict_data
@@ -56,17 +57,20 @@ class EnhancedBurndownChart
   def effective_date
     @effective_date ||= version.effective_date.to_date
   end
+  def first_entry_date
+    @first_entry_date ||= (all_issues.map(&:latest_entry_date).compact.sort.first || start_date)
+  end
   def latest_entry_date
     @latest_entry_date ||= all_issues.map(&:latest_entry_date).compact.sort.last || start_date
   end
-  def start_date_todo_hours
-    @start_date_todo_hours ||= sum_up_hours(:todo_hours_till,start_date)
+  def first_date_todo_hours
+    @first_date_todo_hours ||= sum_up_hours(:todo_hours_till,first_entry_date)
   end
   def latest_date_todo_hours
     @latest_date_todo_hours ||= sum_up_hours(:todo_hours_till,latest_entry_date)
   end
   
   def velocity
-    @velocity ||= (start_date_todo_hours - latest_date_todo_hours) / count_working_days(start_date,latest_entry_date)
+    @velocity ||= (first_date_todo_hours - latest_date_todo_hours) / count_working_days(first_entry_date,latest_entry_date)
   end
 end

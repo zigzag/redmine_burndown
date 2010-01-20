@@ -5,7 +5,8 @@
                   "Planned" => {:collection => @chart.planned_data,:x => :date, :y => :hours},
                   "Insight"=> {:collection => @chart.insight_data,:x=>:date, :y=>:hours},
                   "TODO" => {:collection => @chart.todo_data,:x=>:date, :y=>:hours},
-                  "Predict" => {:collection => @chart.predict_data,:x => :date, :y => :hours}
+                  "Predict" => {:collection => @chart.predict_data,:x => :date, :y => :hours,
+                    :options=>{:points=>{:show=>false}}}
               }, 
               { :colors=> ["#edc240", "#afd8f8", "#9440ed", "#4da74d"],
                 :xaxis=>{:mode=>:time}, 
