@@ -20,14 +20,14 @@ class EnhancedBurndownChart
   end
 
   def todo_data
-    (first_entry_date..latest_entry_date).inject([]) do |todo_data, date| 
+    (first_entry_date..(latest_entry_date)).inject([]) do |todo_data, date| 
       todo_data << DateHoursPair.new(date,sum_up_hours(:todo_hours_till,date))
     end
   end
   
   def predict_data
     predict_data = []
-    return predict_data if velocity <= 0 # unpredictable
+    return predict_data if (!velocity.finite? || velocity <= 0 || latest_date_todo_hours<=0) # unpredictable
     date = latest_entry_date
     todo = latest_date_todo_hours
     begin
@@ -48,7 +48,7 @@ class EnhancedBurndownChart
     all_issues.sum { |issue| issue.send(hours_method,till_date)}
   end
   def count_working_days(from,to)
-    (from..to).reject { |d| [0,6].include? d.wday }.count
+    (from...to).reject { |d| [0,6].include? d.wday }.count
   end
   
   def start_date
@@ -61,7 +61,10 @@ class EnhancedBurndownChart
     @first_entry_date ||= (all_issues.map(&:latest_entry_date).compact.sort.first || start_date)
   end
   def latest_entry_date
-    @latest_entry_date ||= all_issues.map(&:latest_entry_date).compact.sort.last || start_date
+    return @latest_entry_date if @latest_entry_date
+    entried_date = all_issues.map(&:latest_entry_date).compact.sort.last
+    @latest_entry_date = (entried_date)? (entried_date + 1.day) : start_date
+    return @latest_entry_date
   end
   def first_date_todo_hours
     @first_date_todo_hours ||= sum_up_hours(:todo_hours_till,first_entry_date)
